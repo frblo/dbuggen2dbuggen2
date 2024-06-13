@@ -1,5 +1,7 @@
 package parser
 
+import "time"
+
 type YamlIssue struct {
 	Number      int
 	Name        string
@@ -7,12 +9,20 @@ type YamlIssue struct {
 	Date        string
 }
 
-type RawArticle struct {
-	Ok       bool
-	Filename string
+type mediumArticle struct {
+	Ok        bool
+	Date      time.Time
+	Title     string
+	Category  int
+	Order     int
+	Author    string
+	NØllesafe bool
+	Content   string
+}
+
+type rawArticle struct {
 	Title    string
 	Category int
 	Order    int
 	Author   string
-	Content  string
 }
