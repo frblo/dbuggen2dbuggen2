@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -32,6 +33,40 @@ func GetArticles() []RawArticle {
 		log.Fatal(err)
 	}
 
-	msg := make(chan RawArticle)
+	ch := make(chan RawArticle)
+	articles := make([]RawArticle, len(posts))
+
+	for _, p := range posts {
+		go getArticle(p, ch)
+	}
+
+	for i := 0; i < len(posts); i++ {
+		a := <-ch
+		if a.Ok {
+			articles[i] = a
+		}
+	}
+
+	return articles
+}
+
+var emptyArticle = RawArticle{
+	Ok:       false,
+	Filename: "",
+	Title:    "",
+	Category: 0,
+	Order:    0,
+	Author:   "",
+	Content:  "",
+}
+
+func getArticle(filename string, ch chan RawArticle) {
+	f, err := os.Open(fmt.Sprintf("dbuggen/_posts/%v", filename))
+	if err != nil {
+		ch <- emptyArticle
+	}
+	defer f.Close()
+
+	// reader := bufio.NewReader(f)
 
 }
