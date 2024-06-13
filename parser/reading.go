@@ -1,4 +1,4 @@
-package reading
+package parser
 
 import (
 	"log"
@@ -19,4 +19,19 @@ func GetIssues() []YamlIssue {
 	}
 
 	return issues
+}
+
+func GetArticles() []RawArticle {
+	postsDir, err := os.Open("dbuggen/_posts")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	posts, err := postsDir.Readdirnames(0)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	msg := make(chan RawArticle)
+
 }

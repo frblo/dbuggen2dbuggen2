@@ -2,10 +2,10 @@ package main
 
 import (
 	"dbuggen2dbuggen2/install"
-	"dbuggen2dbuggen2/reading"
+	"dbuggen2dbuggen2/parser"
 )
 
 func main() {
 	install.Installdbuggen()
-	reading.GetIssues()
+	parser.GetIssues()
 }
