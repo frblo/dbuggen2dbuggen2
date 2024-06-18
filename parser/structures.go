@@ -16,21 +16,9 @@ type Issue struct {
 	Articles       []Article
 }
 
-// type mediumArticle struct {
-// 	Ok        bool
-// 	Date      time.Time
-// 	Title     string
-// 	Category  int
-// 	Order     int
-// 	Author    string
-// 	NØllesafe bool
-// 	Content   string
-// }
-
 type Article struct {
 	ID         int
 	Title      string
-	Issue      int
 	AuthorText string
 	IssueIndex int
 	Content    string
