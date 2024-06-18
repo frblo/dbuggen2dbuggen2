@@ -2,19 +2,16 @@ package main
 
 import (
 	"dbuggen2dbuggen2/install"
-	"dbuggen2dbuggen2/parser"
+	"dbuggen2dbuggen2/lexer"
 	"fmt"
 )
 
 func main() {
-	install.Installdbuggen()
-	// parser.GetIssues()
+	path := "dbuggen"
+	install.Installdbuggen(path)
+	lexedIssues, lexedArticles := lexer.Lex(path)
+	// parsedIssue := parser.Parse(lexedIssues, lexedArticles)
 
-	artics := parser.GetArticles()
-	// for _, a := range artics {
-	// 	fmt.Println(a.Title)
-	// }
-	fmt.Println(artics[0].Title)
-	fmt.Println(artics[0].Author)
-	fmt.Println(artics[0].Content)
+	fmt.Println(lexedIssues)
+	fmt.Println(lexedArticles)
 }

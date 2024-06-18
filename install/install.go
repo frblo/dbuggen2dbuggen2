@@ -7,8 +7,7 @@ import (
 	"github.com/go-git/go-git/v5"
 )
 
-func Installdbuggen() {
-	path := "dbuggen"
+func Installdbuggen(path string) {
 	log.Printf("Trying to clone into %v", path)
 	err := clone(path)
 

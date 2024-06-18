@@ -6,9 +6,10 @@ var naughty = []string{
 	"mottagningen",
 	"dadderiet",
 	"dadda",
-	"nØllan",
+	"nøllan",
 	"drifveriet",
 	"driveriet",
+	"drifvare",
 	"mottagare",
 	"öfverdrif",
 	"öfverdriv",
@@ -21,7 +22,7 @@ var naughty = []string{
 
 func checkNaughtyness(str string) bool {
 	for _, w := range naughty {
-		if strings.Contains(str, w) {
+		if strings.Contains(strings.ToLower(str), w) {
 			return false
 		}
 	}
