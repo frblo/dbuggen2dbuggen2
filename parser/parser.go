@@ -5,8 +5,6 @@ package parser
 import (
 	"database/sql"
 	"dbuggen2dbuggen2/lexer"
-	"fmt"
-	"log"
 	"time"
 )
 
@@ -79,37 +77,4 @@ func makeArticle(lexedArticle lexer.Article, articleID int, index int) Article {
 		LastEdited: date,
 		NØllesafe:  nØllesafe,
 	}
-}
-
-func extractDate(filename string) time.Time {
-	date, err := time.Parse("2006-01-02T15", fmt.Sprintf("%vT01", filename[0:10]))
-	if err != nil {
-		date = time.Now()
-		log.Println(err)
-	}
-
-	return date
-}
-
-func averageDate(dates []time.Time, issueMonthString string) time.Time {
-	sum := int64(0)
-	for _, date := range dates {
-		sum += date.Unix()
-	}
-
-	mean := sum / int64(len(dates))
-	meanDate := time.Unix(mean, 0)
-
-	issueMonth, err := time.Parse("Jan 2006", issueMonthString)
-	if err != nil {
-		log.Print(err)
-		return meanDate
-	}
-
-	if meanDate.Month() != issueMonth.Month() || meanDate.Year() != issueMonth.Year() {
-		zone, _ := time.LoadLocation("Europe/Stockholm")
-		return time.Date(issueMonth.Year(), issueMonth.Month(), 0, 0, 0, 0, 0, zone)
-	}
-
-	return meanDate
 }
