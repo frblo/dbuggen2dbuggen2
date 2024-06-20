@@ -14,6 +14,7 @@ import (
 )
 
 func Execute(issues []parser.Issue) {
+	log.Println("Starting execution...")
 	path := "dbuggen1data.psql"
 	if _, err := os.Stat(path); err == nil {
 		log.Printf("File %v already exists. Deleting and rewriting", path)
@@ -21,14 +22,21 @@ func Execute(issues []parser.Issue) {
 	}
 
 	f, err := os.Create(path)
+	defer f.Close()
 
 	if err != nil {
 		log.Fatalf("Failed to create file, %v", err)
 	}
 	writer := bufio.NewWriter(f)
+	defer writer.Flush()
 
 	for _, issue := range issues {
-		writer.WriteString(fmt.Sprintf("-- Issue %v number %v\n", issue.Title, issue.ID))
+		if _, err := writer.WriteString(fmt.Sprintf("-- Issue %v number %v\n", issue.Title, issue.ID)); err != nil {
+			log.Print(err)
+			os.Remove(path)
+			return
+		}
+
 		if err := writeIssue(writer, issue); err != nil {
 			log.Printf("Failed to write issue %v. Deleting file.", issue.Title)
 			os.Remove(path)
@@ -40,16 +48,22 @@ func Execute(issues []parser.Issue) {
 				os.Remove(path)
 				return
 			}
-			writer.WriteRune('\n')
+
+			if _, err := writer.WriteRune('\n'); err != nil {
+				log.Print(err)
+				os.Remove(path)
+				return
+			}
 		}
 	}
+	log.Println("Execution complete")
 }
 
 func writeIssue(w *bufio.Writer, issue parser.Issue) error {
 	code := fmt.Sprintf("INSERT INTO Archive.Issue VALUES (%v, %v, %v, %v, %v, %v, %v);\n",
 		issue.ID,
-		fmt.Sprintf(`$tag$%v$tag$`, issue.Title),
-		issue.PublishingDate.Format(time.DateOnly),
+		escapeSqlString(issue.Title),
+		fmt.Sprintf(`'%v'`, issue.PublishingDate.Format(time.DateOnly)),
 		sqlNullInt32ToString(issue.Pdf),
 		sqlNullInt32ToString(issue.Html),
 		sqlNullInt32ToString(issue.Coverpage),
@@ -71,7 +85,7 @@ func writeArticle(w *bufio.Writer, article parser.Article, issueID int) error {
 		escapeSqlString(article.AuthorText),
 		article.IssueIndex,
 		escapeSqlString(article.Content),
-		article.LastEdited.Format(time.DateOnly),
+		fmt.Sprintf(`'%v'`, article.LastEdited.Format(time.DateOnly)),
 		article.NØllesafe,
 	)
 	if _, err := w.WriteString(code); err != nil {
@@ -83,7 +97,7 @@ func writeArticle(w *bufio.Writer, article parser.Article, issueID int) error {
 }
 
 func escapeSqlString(cont string) string {
-	tagsymbol := []byte("!")
+	tagsymbol := []byte("i")
 	tagbuilder := strings.Builder{}
 	tagbuilder.Write(tagsymbol)
 

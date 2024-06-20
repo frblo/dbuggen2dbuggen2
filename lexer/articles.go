@@ -42,9 +42,9 @@ func getArticles(path string) map[int][]Article {
 		}
 	}
 
-	// for i, a := range articles {
-	// 	articles[i] = sortArticles(a)
-	// }
+	for i, a := range articles {
+		articles[i] = sortArticles(a)
+	}
 
 	return articles
 }

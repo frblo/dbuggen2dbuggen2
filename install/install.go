@@ -8,6 +8,7 @@ import (
 )
 
 func Installdbuggen(path string) {
+	log.Println("Installing dbuggen repository from https://github.com/datasektionen/dbuggen...")
 	log.Printf("Trying to clone into %v", path)
 	err := clone(path)
 
@@ -21,6 +22,7 @@ func Installdbuggen(path string) {
 			}
 		}
 	}
+	log.Printf("Download complete")
 }
 
 func clone(path string) error {

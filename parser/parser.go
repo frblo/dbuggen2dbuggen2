@@ -5,10 +5,12 @@ package parser
 import (
 	"database/sql"
 	"dbuggen2dbuggen2/lexer"
+	"log"
 	"time"
 )
 
 func Parse(lexedIssues []lexer.Issue, lexedArticles map[int][]lexer.Article) []Issue {
+	log.Println("Start parsing...")
 	issues := make([]Issue, len(lexedIssues))
 	issueCount := 0
 	articleCount := 0
@@ -26,6 +28,7 @@ func Parse(lexedIssues []lexer.Issue, lexedArticles map[int][]lexer.Article) []I
 		issueCount++
 	}
 
+	log.Println("Parsing complete")
 	return issues
 }
 
