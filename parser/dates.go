@@ -34,6 +34,12 @@ func averageDate(dates []time.Time, issueMonthString string) time.Time {
 			log.Print(err)
 			return meanDate
 		}
+
+		issueMonth, err = time.Parse("Jan 2006", issueMonthString)
+		if err != nil {
+			log.Print(err)
+			return meanDate
+		}
 	}
 
 	if meanDate.Month() != issueMonth.Month() || meanDate.Year() != issueMonth.Year() {
@@ -48,7 +54,7 @@ func translateDate(dateString string) (string, error) {
 	untranslatedMonth, year, found := strings.Cut(dateString, " ")
 
 	if !found {
-		return "", errors.New(`Filename not formatted as "MONTH YEAR"`)
+		return "", errors.New(`filename not formatted as "MONTH YEAR"`)
 	}
 
 	var month string
